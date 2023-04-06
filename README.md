@@ -8,6 +8,6 @@ Sources:
 
 Currently I did basic test in console to see if algorithm works. It does give correct path, I did not do any optimization though.
 Future plans:
-* Convert syntax to modern C++, [x] (I guess i did good job)
+* Convert syntax to modern C++, - [x] (I guess i did good job)
 * Create visual representation with SDL2 or something like that,
 * Implement this with Arduino robot so it can calculate its own path on some grid and move on it.
