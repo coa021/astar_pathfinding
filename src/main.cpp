@@ -50,6 +50,8 @@
 
 int main()
 {
+	srand(time(0));
+
 	AStar astar;
 	astar.initialize();
 	astar.solve_astar();

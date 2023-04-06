@@ -5,11 +5,18 @@
 #include <string>
 #include <algorithm>
 #include <list>
+#include <random>
+#include <functional>
 
 
 class AStar
 {
 public:
+	bool randomBool() {
+		return ((double)rand() / (double)RAND_MAX) < 0.30;
+
+	}
+
 	bool initialize()
 	{
 		nodes = new Node[map_width * map_height];
@@ -24,9 +31,10 @@ public:
 				nodes[y * map_width + x].parent = nullptr;
 				nodes[y * map_width + x].value = ' ';
 
-				if ((y * map_width + x) % 7 == 0)
-				{
 
+
+				if (randomBool())
+				{
 					nodes[y * map_width + x].value = 'x';
 					nodes[y * map_width + x].b_Obstacle = true;
 				}
