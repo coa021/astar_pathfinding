@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <list>
 
 
 class AStar
@@ -73,8 +74,50 @@ public:
 		startNode->local_goal = 0.0;
 		startNode->global_goal= heuristic(startNode, endNode);
 
-		// Following code refers to 
+		// Following refers to open list from writeup
+		// Open list has reachable/walkable squares adjacent to the starting point
+		std::list<Node*> open_list;
+		open_list.push_back(startNode);
 
+		while (!open_list.empty() && currentNode != endNode)
+		{
+			//sort so the lowest score is first
+			open_list.sort([](const Node* lhs, const Node* rhs) { return lhs->global_goal < rhs->global_goal; });
+
+			//get rid of nodes that are already visited
+			while (!open_list.empty() && open_list.front()->b_Visited)
+				open_list.pop_front();
+
+			//if there are no valid nodes, abort
+			if (open_list.empty())
+				break;
+
+			currentNode = open_list.front();
+			currentNode->b_Visited = true;
+
+			//checking neighbours
+			for (auto neigbour : currentNode->neighbours)
+			{
+				//if not visited and not an obstacle, add to open_list
+				if (!neigbour->b_Visited && !neigbour->b_Obstacle)
+					open_list.push_back(neigbour);
+
+				//calculate potentional lowest parent distance
+				double possible_lower_goal = currentNode->local_goal + distance(currentNode, neigbour);
+
+				//if this is shorter path, update neigbour to use this node
+				if (possible_lower_goal < neigbour->local_goal)
+				{
+					neigbour->parent = currentNode;
+					neigbour->local_goal= possible_lower_goal;
+
+					//update the score
+					neigbour->global_goal = neigbour->local_goal + heuristic(neigbour, endNode);
+				}
+			}
+
+		}
+		return true;
 	}
 
 private:
