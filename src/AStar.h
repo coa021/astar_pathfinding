@@ -22,6 +22,14 @@ public:
 				nodes[y * map_width + x].b_Obstacle = false;
 				nodes[y * map_width + x].b_Visited = false;
 				nodes[y * map_width + x].parent = nullptr;
+				nodes[y * map_width + x].value = ' ';
+
+				if ((y * map_width + x) % 7 == 0)
+				{
+
+					nodes[y * map_width + x].value = 'x';
+					nodes[y * map_width + x].b_Obstacle = true;
+				}
 			}
 
 		/*  creating connections
@@ -34,18 +42,18 @@ public:
 				// if node is on the edges
 				// theres no possibility to go in some directions
 				if (y > 0)
-					nodes[y * map_width + x].neighbours.push_back(&nodes[(y - 1) * map_width + x);
+					nodes[y * map_width + x].neighbours.push_back(&nodes[(y - 1) * map_width + x]);
 				if (y < map_height - 1)
-					nodes[y * map_width + x].neighbours.push_back(&nodes[(y + 1) * map_width + x);
+					nodes[y * map_width + x].neighbours.push_back(&nodes[(y + 1) * map_width + x]);
 				if (x > 0)
-					nodes[y * map_width + x].neighbours.push_back(&nodes[(y    ) * map_width + (x - 1));
+					nodes[y * map_width + x].neighbours.push_back(&nodes[(y)*map_width + (x - 1)]);
 				if (x < map_width - 1)
-					nodes[y * map_width + x].neighbours.push_back(&nodes[(y    ) * map_width + (x + 1));
+					nodes[y * map_width + x].neighbours.push_back(&nodes[(y)*map_width + (x + 1)]);
 			}
 
 		//manual position of start/end
-		startNode = &nodes[0];
-		endNode = &nodes[(map_height / 2) * map_width + map_width / 2];
+		startNode = &nodes[5];
+		endNode = &nodes[(map_width - 1) * (map_height - 1)];
 
 		return true;
 	}
@@ -58,10 +66,10 @@ public:
 			{
 				nodes[y * map_width + x].b_Visited = false;
 				nodes[y * map_width + x].global_goal = INFINITY;
-				nodes[y * map_width + x].local_goal= INFINITY;
+				nodes[y * map_width + x].local_goal = INFINITY;
 				nodes[y * map_width + x].parent = nullptr;
 			}
-		
+
 		auto distance = [](Node* a, Node* b)
 		{
 			return sqrtl((a->x - b->x) * (a->x - b->x) + (a->y - b->y) * (a->y - b->y));
@@ -72,7 +80,7 @@ public:
 		//starting conditions
 		Node* currentNode = startNode;
 		startNode->local_goal = 0.0;
-		startNode->global_goal= heuristic(startNode, endNode);
+		startNode->global_goal = heuristic(startNode, endNode);
 
 		// Following refers to open list from writeup
 		// Open list has reachable/walkable squares adjacent to the starting point
@@ -109,7 +117,7 @@ public:
 				if (possible_lower_goal < neigbour->local_goal)
 				{
 					neigbour->parent = currentNode;
-					neigbour->local_goal= possible_lower_goal;
+					neigbour->local_goal = possible_lower_goal;
 
 					//update the score
 					neigbour->global_goal = neigbour->local_goal + heuristic(neigbour, endNode);
@@ -118,6 +126,35 @@ public:
 
 		}
 		return true;
+	}
+
+
+	void connect_path()
+	{
+		if (endNode != nullptr)
+		{
+			Node* p = endNode;
+			while (p->parent != nullptr)
+			{
+				p->value = 'o';
+				p = p->parent;
+			}
+		}
+	}
+
+
+	void print_graph()
+	{
+		for (int x = 0; x < map_width; x++)
+		{
+			for (int y = 0; y < map_height; y++)
+			{
+				//for (auto n : nodes[y * map_width + x].neighbours)
+				std::cout << nodes[y * map_width + x].value << " ";
+
+			}
+			std::cout << "\n";
+		}
 	}
 
 private:
@@ -129,6 +166,7 @@ private:
 		double local_goal;
 		int x;
 		int y;
+		char value;
 
 		std::vector<Node*> neighbours;
 		Node* parent;
