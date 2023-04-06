@@ -57,6 +57,7 @@ int main()
 	astar.solve_astar();
 	astar.connect_path();
 	astar.print_graph();
+	//astar.debug_print_graph();
 
 
 	return 0;
