@@ -52,9 +52,11 @@ public:
 			}
 
 		//manual position of start/end
-		startNode = &nodes[5];
-		endNode = &nodes[(map_width - 1) * (map_height - 1)];
+		startNode = &nodes[16];
+		startNode->value = 'S';
 
+		endNode = &nodes[map_width*map_height-1];
+		endNode->value = 'E';
 		return true;
 	}
 
@@ -136,7 +138,8 @@ public:
 			Node* p = endNode;
 			while (p->parent != nullptr)
 			{
-				p->value = 'o';
+				if(p!=endNode)	// pointless quick hax not to delete endNode's value xd
+					p->value = 'o';
 				p = p->parent;
 			}
 		}
@@ -149,8 +152,21 @@ public:
 		{
 			for (int y = 0; y < map_height; y++)
 			{
-				//for (auto n : nodes[y * map_width + x].neighbours)
 				std::cout << nodes[y * map_width + x].value << " ";
+
+			}
+			std::cout << "\n";
+		}
+	}
+
+	void debug_print_graph()
+	{
+		for (int x = 0; x < map_width; x++)
+		{
+			for (int y = 0; y < map_height; y++)
+			{
+				//for (auto n : nodes[y * map_width + x].neighbours)
+				std::cout << y * map_width + x << " ";
 
 			}
 			std::cout << "\n";

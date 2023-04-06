@@ -53,7 +53,7 @@ int main()
 	AStar astar;
 	astar.initialize();
 	astar.solve_astar();
-	astar.draw_path();
+	astar.connect_path();
 	astar.print_graph();
 
 
