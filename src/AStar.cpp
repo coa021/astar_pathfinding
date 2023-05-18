@@ -33,7 +33,7 @@ bool AStar::initialize()
 	for (int x = 0; x < map_width; x++)
 	{
 		nodes.emplace_back();
-		nodes.back().reserve(map_width);	//is this necessary? can i just use reserve?
+		nodes.back().reserve(map_width);
 		for (int y = 0; y < map_height; y++)
 		{
 			NodePtr node = create_node();
@@ -49,7 +49,7 @@ bool AStar::initialize()
 				node->value = 'x';
 				node->b_Obstacle = true;
 			}
-			nodes.back().push_back(std::move(node));	//here to, do i need back()?
+			nodes.back().push_back(std::move(node));	//i do need it
 		}
 	}
 
@@ -75,6 +75,16 @@ bool AStar::initialize()
 				node->neighbours.push_back(nodes.at(y).at(x - 1));
 			if (x < map_width - 1)
 				node->neighbours.push_back(nodes.at(y).at(x + 1));
+
+			// Diagonal connection
+            if (y > 0 && x > 0)
+                node->neighbours.push_back(nodes.at(y - 1).at(x - 1));
+            if (y < map_height - 1 && x > 0)
+                node->neighbours.push_back(nodes.at(y + 1).at(x - 1));
+            if (y > 0 && x < map_width - 1)
+                node->neighbours.push_back(nodes.at(y - 1).at(x + 1));
+            if (y < map_height - 1 && x < map_width - 1)
+                node->neighbours.push_back(nodes.at(y + 1).at(x + 1));
 		}
 
 	//manual position of start/end
@@ -112,7 +122,6 @@ bool AStar::solve_astar()
 	// Following refers to open list from writeup
 	// Open list has reachable/walkable squares adjacent to the starting point
 
-	//is this the problem??
 	std::list<NodePtr> open_list;
 	open_list.push_back(startNode);
 	
